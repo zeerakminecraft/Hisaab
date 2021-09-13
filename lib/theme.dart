@@ -17,3 +17,12 @@ final kTheme = ThemeData(
     brightness: Brightness.light,
   )
 );
+
+final kNumberTheme = TextStyle(
+    fontWeight: FontWeight.w900,
+    fontSize: 20,
+);
+
+final kTextTheme = TextStyle(
+
+);
