@@ -1,4 +1,3 @@
-import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hisaab/theme.dart';
 import 'screens/khata_screen.dart';
@@ -8,7 +7,6 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
-
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -21,7 +19,7 @@ class _MyAppState extends State<MyApp> {
     KhataScreen(),
   ];
 
-  void _onItemTapped(int index){
+  void _onItemTapped(int index) {
     print(index);
     setState(() {
       _selectedindex = index;
@@ -33,14 +31,14 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       theme: kTheme,
       home: Scaffold(
-          body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(
-                child: pages.elementAt(_selectedindex),
-              ),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Center(
+              child: pages.elementAt(_selectedindex),
             ),
           ),
+        ),
         bottomNavigationBar: BottomNavigationBar(
           iconSize: 20,
           elevation: 10,
