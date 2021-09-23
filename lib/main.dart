@@ -19,6 +19,9 @@ class _MyAppState extends State<MyApp> {
 
   final List<Widget> pages = [
     const KhataScreen(),
+
+    /// TODO: add placeholder widgets here
+    /// so the app doesn't crash
   ];
 
   void _onItemTapped(int index) {
@@ -31,7 +34,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: kTheme,
+      // theme: kTheme,
       home: Scaffold(
         body: SafeArea(
           child: Padding(

@@ -4,19 +4,9 @@ import 'package:hisaab/theme.dart';
 import 'package:hisaab/screens/add_customer.dart';
 
 final amountobj = Amount();
+
+/// EXPLAIN ??
 late final int balanceDue = amountobj.lent - amountobj.borrowed;
-List<Customer> customers = [
-  Customer(
-      customer: "Zeerak",
-      contact: "03009245927",
-      address: "B-4, Start Shelter, North Karachi",
-      amount: amountobj),
-  Customer(
-      customer: "Zain",
-      contact: "03409275761",
-      address: "R-41, Block 18, Jauhar",
-      amount: amountobj),
-];
 
 class KhataScreen extends StatefulWidget {
   const KhataScreen({Key? key}) : super(key: key);
@@ -26,6 +16,19 @@ class KhataScreen extends StatefulWidget {
 }
 
 class _KhataScreenState extends State<KhataScreen> {
+  List<Customer> customers = [
+    Customer(
+        customer: "Zeerak",
+        contact: "03009245927",
+        address: "B-4, Start Shelter, North Karachi",
+        amount: amountobj),
+    Customer(
+        customer: "Zain",
+        contact: "03409275761",
+        address: "R-41, Block 18, Jauhar",
+        amount: amountobj),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -37,41 +40,38 @@ class _KhataScreenState extends State<KhataScreen> {
               child: Card(
                 // margin: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
                 color: Colors.green,
-                child: ListTile(
-                  title: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const Text('Borrowed'),
-                        const SizedBox(width: 10),
-                        Text(
-                          amountobj.borrowed.toString(),
-                          style: kNumberTheme,
-                        ),
-                      ],
-                    ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const Text('Borrowed'),
+                      const SizedBox(width: 10),
+                      Text(
+                        'PKR ${amountobj.borrowed}',
+                        style: kNumberTheme,
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
-            const SizedBox(width: 10.0),
             Expanded(
               child: Card(
                 // margin: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
                 color: Colors.red,
-                child: ListTile(
-                  title: Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        const Text('Lent'),
-                        const SizedBox(width: 10),
-                        Text(
-                          amountobj.lent.toString(),
-                          style: kNumberTheme,
-                        ),
-                      ],
-                    ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      const Text('Lent'),
+                      const SizedBox(width: 10),
+                      Text(
+                        'PKR ${amountobj.lent}',
+                        style: kNumberTheme,
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -83,9 +83,7 @@ class _KhataScreenState extends State<KhataScreen> {
             itemCount: customers.length,
             itemBuilder: (context, index) {
               return Card(
-                elevation: 10,
                 child: ListTile(
-                  dense: true,
                   tileColor: Colors.orangeAccent.withOpacity(0.7),
                   title: Text(
                     customers[index].customer,
@@ -112,25 +110,20 @@ class _KhataScreenState extends State<KhataScreen> {
             },
           ),
         ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: TextButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(Colors.orange),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(18.0),
-                    side: const BorderSide(color: Colors.black)),
+        ElevatedButton(
+          child: const Text('ADD CUTOMER'),
+          onPressed: () async {
+            final customer = await Navigator.push<Customer>(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AddCustomer(),
               ),
-            ),
-            child: const Text('ADD CUTOMER'),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AddCustomer()),
-              );
-            },
-          ),
+            );
+            if (customer == null) return;
+            setState(() {
+              customers.add(customer);
+            });
+          },
         )
       ],
     );
