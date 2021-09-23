@@ -10,10 +10,8 @@ class AddCustomer extends StatefulWidget {
 }
 
 class _AddCustomerState extends State<AddCustomer> {
-
-  final Customer customer = Customer(customer: '',contact: '',address: '');
-  String dropdownval ="";
-
+  final Customer customer = Customer(customer: '', contact: '', address: '');
+  String dropdownval = "";
 
   @override
   Widget build(BuildContext context) {
@@ -22,36 +20,28 @@ class _AddCustomerState extends State<AddCustomer> {
         child: Expanded(
           child: Column(
             children: [
-              Text(
-                ''
-              ),
-              SizedBox(height: 10),
+              const Text(''),
+              const SizedBox(height: 10),
               TextField(
-                onChanged: (value){
+                onChanged: (value) {
                   customer.customer = value;
                 },
-                decoration: InputDecoration(
-                  hintText: 'Name'
-                ),
+                decoration: const InputDecoration(hintText: 'Name'),
               ),
               TextField(
-                onChanged: (value){
+                onChanged: (value) {
                   customer.contact = value;
                 },
-                decoration: InputDecoration(
-                    hintText: 'contact number'
-                ),
+                decoration: const InputDecoration(hintText: 'contact number'),
               ),
               TextField(
-                onChanged: (value){
+                onChanged: (value) {
                   customer.address = value;
                 },
-                decoration: InputDecoration(
-                    hintText: 'Address'
-                ),
+                decoration: const InputDecoration(hintText: 'Address'),
               ),
               DropdownButton(
-                items: <String>['Lended','Borrowed']
+                items: <String>['Lended', 'Borrowed']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,

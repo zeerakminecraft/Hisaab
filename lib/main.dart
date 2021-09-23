@@ -3,10 +3,12 @@ import 'package:hisaab/theme.dart';
 import 'screens/khata_screen.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -16,11 +18,11 @@ class _MyAppState extends State<MyApp> {
   double total = 0;
 
   final List<Widget> pages = [
-    KhataScreen(),
+    const KhataScreen(),
   ];
 
   void _onItemTapped(int index) {
-    print(index);
+    // print(index);
     setState(() {
       _selectedindex = index;
     });
@@ -47,7 +49,7 @@ class _MyAppState extends State<MyApp> {
           unselectedItemColor: Colors.black54,
           currentIndex: _selectedindex,
           onTap: _onItemTapped,
-          items: [
+          items: const [
             BottomNavigationBarItem(
               icon: Icon(Icons.ballot_outlined),
               label: 'Khata',

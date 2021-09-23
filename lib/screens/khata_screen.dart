@@ -3,13 +3,19 @@ import 'package:hisaab/models/data.dart';
 import 'package:hisaab/theme.dart';
 import 'package:hisaab/screens/add_customer.dart';
 
-
-
 final amountobj = Amount();
 late final int balanceDue = amountobj.lent - amountobj.borrowed;
-List <Customer> customers = [
-  Customer(customer: "Zeerak", contact: "03009245927", address: "B-4, Start Shelter, North Karachi", amount: amountobj),
-  Customer(customer: "Zain", contact: "03409275761", address: "R-41, Block 18, Jauhar", amount: amountobj),
+List<Customer> customers = [
+  Customer(
+      customer: "Zeerak",
+      contact: "03009245927",
+      address: "B-4, Start Shelter, North Karachi",
+      amount: amountobj),
+  Customer(
+      customer: "Zain",
+      contact: "03409275761",
+      address: "R-41, Block 18, Jauhar",
+      amount: amountobj),
 ];
 
 class KhataScreen extends StatefulWidget {
@@ -20,139 +26,116 @@ class KhataScreen extends StatefulWidget {
 }
 
 class _KhataScreenState extends State<KhataScreen> {
-
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Expanded(
-                child: Card(
-                  // margin: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
-                  color: Colors.green,
-                  child: ListTile(
-                    title: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(
-                            'Borrowed',
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            amountobj.borrowed.toString(),
-                            style: kNumberTheme,
-                          ),
-                        ],
-                      ),
+    return Column(
+      children: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Expanded(
+              child: Card(
+                // margin: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
+                color: Colors.green,
+                child: ListTile(
+                  title: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Text('Borrowed'),
+                        const SizedBox(width: 10),
+                        Text(
+                          amountobj.borrowed.toString(),
+                          style: kNumberTheme,
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
-              SizedBox(
-                width: 10.0,
-              ),
-              Expanded(
-                child: Card(
-                  // margin: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
-                  color: Colors.red,
-                  child: ListTile(
-                    title: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(
-                            'Lent',
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            amountobj.lent.toString(),
-                            style: kNumberTheme,
-                          ),
-                        ],
-                      ),
+            ),
+            const SizedBox(width: 10.0),
+            Expanded(
+              child: Card(
+                // margin: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
+                color: Colors.red,
+                child: ListTile(
+                  title: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Text('Lent'),
+                        const SizedBox(width: 10),
+                        Text(
+                          amountobj.lent.toString(),
+                          style: kNumberTheme,
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
-            ],
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: customers.length,
-              itemBuilder: (context, index){
-                return Card(
-                  elevation: 10,
-                  child: ListTile(
-                    dense: true,
-                    tileColor: Colors.orangeAccent.withOpacity(0.7),
-                    title: Text(
-                      customers[index].customer,
-                      style: kTextTheme,
-                    ),
-                    subtitle: Text(
-                      customers[index].contact,
-                      style: kTextTheme,
-                    ),
-                    leading: Icon(
-                      Icons.account_circle_sharp,
-                      color: Colors.orange[700],
-                      size: 20,
-                    ),
-                    trailing: Text(
-                      balanceDue.toString(),
-                      style: TextStyle(
-                        fontWeight: FontWeight.w900,
-                        fontSize: 15,
-                      ),
+            ),
+          ],
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemCount: customers.length,
+            itemBuilder: (context, index) {
+              return Card(
+                elevation: 10,
+                child: ListTile(
+                  dense: true,
+                  tileColor: Colors.orangeAccent.withOpacity(0.7),
+                  title: Text(
+                    customers[index].customer,
+                    style: kTextTheme,
+                  ),
+                  subtitle: Text(
+                    customers[index].contact,
+                    style: kTextTheme,
+                  ),
+                  leading: Icon(
+                    Icons.account_circle_sharp,
+                    color: Colors.orange[700],
+                    size: 20,
+                  ),
+                  trailing: Text(
+                    balanceDue.toString(),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 15,
                     ),
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: TextButton(
-              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.orange),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                          side: BorderSide(color: Colors.black)
-                      )
-                  )
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: TextButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.orange),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                    side: const BorderSide(color: Colors.black)),
               ),
-              child: Text(
-                'ADD CUTOMER',
-              ),
-              onPressed: (){
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AddCustomer())
-                );
-              },
             ),
-          )
-        ],
-      ),
+            child: const Text('ADD CUTOMER'),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AddCustomer()),
+              );
+            },
+          ),
+        )
+      ],
     );
   }
 }
-
-
-
-
-
-
 
 // class MainScreen extends StatefulWidget {
 //   @override
