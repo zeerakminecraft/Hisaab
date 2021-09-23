@@ -1,4 +1,3 @@
-import 'dart:math';
 
 
 class Amount {
@@ -20,12 +19,12 @@ class Amount {
   }
 }
 
-class Customer {
+class Customer{
   String customer;
   String contact;
   String address;
-  Amount amount;
-  Customer({required this.customer, required this.contact, required this.address, required this.amount});
+  Amount? amount;
+  Customer({required this.customer, required this.contact, required this.address, this.amount});
 }
 
 
