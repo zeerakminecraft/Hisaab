@@ -27,3 +27,7 @@ final kTextTheme = TextStyle(
 
 );
 
+final kFormStyle = InputDecoration(
+    labelText: 'Name',
+);
+

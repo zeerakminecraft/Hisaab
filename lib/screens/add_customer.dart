@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hisaab/models/data.dart';
+import 'package:hisaab/theme.dart';
 import 'khata_screen.dart';
 
 class AddCustomer extends StatefulWidget {
@@ -11,57 +12,89 @@ class AddCustomer extends StatefulWidget {
 
 class _AddCustomerState extends State<AddCustomer> {
 
-  final Customer customer = Customer(customer: '',contact: '',address: '');
-  String dropdownval ="";
+  void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Invalid Input"),
+          content: new Text("Please enter specify amount category"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
+  static Amount object = Amount();
+  var _formKey = GlobalKey<FormState>();
+  final Customer customer = Customer(customer: '',contact: '',address: '', amount: object);
+  String dropdownval ='';
+  int tempamount = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Expanded(
+        child: Form(
+          key: _formKey,
           child: Column(
             children: [
-              Text(
-                ''
-              ),
-              SizedBox(height: 10),
-              TextField(
-                onChanged: (value){
-                  customer.customer = value;
+              TextFormField(
+                decoration: kFormStyle.copyWith(labelText: 'Name'),
+                validator: (String? value){
+                  if(value!.isEmpty){
+                    return 'Name is required';
+                  }
                 },
-                decoration: InputDecoration(
-                  hintText: 'Name'
-                ),
-              ),
-              TextField(
-                onChanged: (value){
-                  customer.contact = value;
+                onSaved: (String? value){
+                  customer.customer = value!;
                 },
-                decoration: InputDecoration(
-                    hintText: 'contact number'
-                ),
               ),
-              TextField(
-                onChanged: (value){
-                  customer.address = value;
+              TextFormField(
+                decoration: kFormStyle.copyWith(labelText: 'Contact Number'),
+                validator: (String? value){
+                  if(value!.isEmpty){
+                    return 'Phone Number is required';
+                  }
                 },
-                decoration: InputDecoration(
-                    hintText: 'Address'
-                ),
+                onSaved: (String? value){
+                  customer.contact = value!;
+                },
               ),
-              DropdownButton(
-                items: <String>['Lended','Borrowed']
+              DropdownButton<String>(
+                value: dropdownval,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    dropdownval = newValue!;
+                  });
+                },
+                items: <String>['','Lent','Borrowed']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
                   );
                 }).toList(),
-                onChanged: (String? newValue) {
-                  setState(() {
-                    dropdownval = newValue!;
-                  });
+              ),
+              TextFormField(
+                decoration: kFormStyle.copyWith(labelText: 'Amount'),
+                validator: (String? value){
+                  if(value!.isEmpty){
+                    return 'Amount is required';
+                  }
+                },
+                onSaved: (String? value){
+                  tempamount = int.parse(value!);
                 },
               ),
               ClipRRect(
@@ -73,26 +106,36 @@ class _AddCustomerState extends State<AddCustomer> {
                         decoration: const BoxDecoration(
                           gradient: LinearGradient(
                             colors: <Color>[
-                              Color(0xFF0D47A1),
-                              Color(0xFF1976D2),
-                              Color(0xFF42A5F5),
+                              Colors.orangeAccent,
+                              Colors.amberAccent
                             ],
                           ),
                         ),
                       ),
                     ),
                     TextButton(
-                      child: const Text('Gradient'),
+                      child: const Text('Add Customer'),
                       style: TextButton.styleFrom(
                         padding: const EdgeInsets.all(16.0),
                         primary: Colors.white,
                         textStyle: const TextStyle(fontSize: 20),
                       ),
                       onPressed: () {
-                        setState(() {
-                          customers.add(customer);
-                        });
-                        Navigator.pop(context);
+                        if(!_formKey.currentState!.validate()){
+                          return;
+                        }
+                        _formKey.currentState!.save();
+                        if(dropdownval == 'Lent'){
+                          object.lent =  tempamount;
+                          // Navigator.pop(context, customer);
+                        }
+                        else if(dropdownval == 'Borrowed'){
+                          object.borrowed = tempamount;
+                        }
+                        else{
+                          _showDialog();
+                        }
+                        Navigator.pop(context, customer);
                       },
                     ),
                   ],
@@ -105,3 +148,52 @@ class _AddCustomerState extends State<AddCustomer> {
     );
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+// Text(
+//   ''
+// ),
+// SizedBox(height: 10),
+// TextField(
+//   onChanged: (value){
+//     customer.customer = value;
+//   },
+//   decoration: InputDecoration(
+//     hintText: 'Name'
+//   ),
+// ),
+// TextField(
+//   onChanged: (value){
+//     customer.contact = value;
+//   },
+//   decoration: InputDecoration(
+//       hintText: 'contact number'
+//   ),
+// ),
+// TextField(
+//   onChanged: (value){
+//     customer.address = value;
+//   },
+//   decoration: InputDecoration(
+//       hintText: 'Enter amount'
+//   ),
+// ),
+// TextField(
+//   onChanged: (value){
+//     tempamount = int.parse(value);
+//     assert(tempamount is int);
+//   },
+//   decoration: InputDecoration(
+//       hintText: 'Address'
+//   ),
+// ),
