@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hisaab/models/data.dart';
+import 'package:hisaab/models/database_helpers.dart';
 import 'package:hisaab/theme.dart';
 import 'package:hisaab/screens/add_customer.dart';
+import 'package:intl/intl.dart';
 
 
 class KhataScreen extends StatefulWidget {
@@ -13,7 +15,32 @@ class KhataScreen extends StatefulWidget {
 
 class _KhataScreenState extends State<KhataScreen> {
 
+  List <Customer> customers = [];
+  bool isLoading = false;
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    refreshList();
+  }
+
+  Future<Function()?> refreshList() async{
+    setState(() => isLoading = true);
+    this.customers = await CustomerDatabase.instance.readAllNodes();
+    setState(() => isLoading = false);
+  }
+
+  Future deleteCard(int id) async{
+    await CustomerDatabase.instance.delete(id);
+  }
+
+  Future updateCard(int id) async{
+    if (isLoading) return;
+
+    await Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddCustomer()));
+    refreshList();
+  }
 
 
   @override
@@ -83,29 +110,46 @@ class _KhataScreenState extends State<KhataScreen> {
             child: ListView.builder(
               itemCount: customers.length,
               itemBuilder: (context, index){
-                return Card(
-                  elevation: 10,
-                  child: ListTile(
-                    dense: true,
-                    tileColor: Colors.orangeAccent.withOpacity(0.7),
-                    title: Text(
-                      customers[index].customer,
-                      style: kTextTheme,
-                    ),
-                    subtitle: Text(
-                      customers[index].contact,
-                      style: kTextTheme,
-                    ),
-                    leading: Icon(
-                      Icons.account_circle_sharp,
-                      color: Colors.orange[700],
-                      size: 20,
-                    ),
-                    trailing: Text(
-                      customers[index].amount.dueBalance().toString(),
-                      style: TextStyle(
-                        fontWeight: FontWeight.w900,
-                        fontSize: 15,
+                return GestureDetector(
+                  onLongPress: () => deleteCard(customers[index].id!),
+                  onDoubleTap: (){
+
+                  },
+                  child: Card(
+                    elevation: 10,
+                    child: ListTile(
+                      dense: true,
+                      tileColor: Colors.orangeAccent.withOpacity(0.7),
+                      title: Text(
+                        customers[index].customer,
+                        style: kTextTheme,
+                      ),
+                      subtitle: Text(
+                        customers[index].contact,
+                        style: kTextTheme,
+                      ),
+                      leading: Icon(
+                        Icons.account_circle_sharp,
+                        color: Colors.orange[700],
+                        size: 20,
+                      ),
+                      trailing: Row(
+                        children: [
+                          Text(
+                            customers[index].amount.dueBalance().toString(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w900,
+                              fontSize: 15,
+                            ),
+                          ),
+                          Text(
+                            DateFormat('dd-MM-yyyy - kk:mm').format(customers[index].time),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 10,
+                            ),
+                          )
+                        ],
                       ),
                     ),
                   ),

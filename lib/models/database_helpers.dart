@@ -53,12 +53,12 @@ class CustomerDatabase {
 
     final id = await db.rawInsert('INSERT INTO table_name ($columns) VALUES ($values)');
 
-    final id = await db.insert(tableCustomer, customer.toJson());
+    // final id = await db.insert(tableCustomer, customer.toJson());
     return customer.copy(id: id);
   }
 
-  Future<Customer> readCustomer(int id) async{
-    final db =await instance.database;
+  Future<Customer> readCustomer(int id) async {
+    final db = await instance.database;
     final maps = await db.query(
       tableCustomer,
       columns: CustomerDBFields.values,
@@ -69,7 +69,38 @@ class CustomerDatabase {
     if(maps.isNotEmpty){
       return Customer.fromJson(maps.first);
     }
+    else{
+      throw Exception('ID $id not found');
+    }
   }
+
+  Future<List<Customer>> readAllNodes() async{
+    final db = await instance.database;
+    final orderby = '${CustomerDBFields.time} ASC';
+    final result = await db.query(tableCustomer);
+    return result.map((json) => Customer.fromJson(json)).toList();
+  }
+
+  Future<int> update(Customer customer) async{
+    final db = await instance.database;
+    return db.update(
+      tableCustomer,
+      customer.toJson(),
+      where: '${CustomerDBFields.id} = ?',
+      whereArgs: [customer.id],
+    );
+  }
+
+  Future<int> delete(int id) async{
+    final db = await instance.database;
+
+    return await db.delete(
+      tableCustomer,
+      where: '${CustomerDBFields.id} = ?',
+      whereArgs: [id],
+    );
+  }
+
 
   Future closed() async{
     final db = await instance.database;

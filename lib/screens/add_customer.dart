@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hisaab/models/data.dart';
 import 'package:hisaab/theme.dart';
+import 'package:intl/intl.dart';
 
 
 class AddCustomer extends StatefulWidget {
@@ -11,6 +12,7 @@ class AddCustomer extends StatefulWidget {
 }
 
 class _AddCustomerState extends State<AddCustomer> {
+
 
   void _showDialog() {
     // flutter defined function
@@ -36,7 +38,7 @@ class _AddCustomerState extends State<AddCustomer> {
   }
 
   var _formKey = GlobalKey<FormState>();
-  final Customer customer = Customer(customer: '',contact: '',address: '', amount: Amount());
+  final Customer customer = Customer(customer: '',contact: '',address: '', amount: Amount(), time: DateTime.now());
   String dropdownval ='';
   int tempamount = 0;
 

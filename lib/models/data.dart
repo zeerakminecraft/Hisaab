@@ -1,5 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 
 final String tableCustomer = 'customers';
 
@@ -46,16 +47,17 @@ class Amount {
   void updateBorrowed(int borrowedVal){
     borrowed = borrowedVal;
   }
+
 }
 
 class Customer{
-  int id;
+  int? id;
   String customer;
   String contact;
   String address;
   Amount amount;
   DateTime time;
-  Customer({required this.id, required this.customer, required this.contact, required this.address, required this.amount, required this.time});
+  Customer({this.id, required this.customer, required this.contact, required this.address, required this.amount, required this.time});
 
   // Map<String,dynamic> toMap(){
   //   return{
@@ -92,17 +94,32 @@ class Customer{
     time: time?? this.time,
   );
 
-  static Customer fromJson(Map<String, Object?> json) => Customer(
+  factory Customer.fromJson(Map<String, Object?> json) {
+    final amt = Amount();
+    amt.lent = json['lent'] as int;
+    amt.borrowed = json['borrowed'] as int;
+
+    return Customer(
     id: json[CustomerDBFields.id] as int,
     customer: json[CustomerDBFields.customer] as String,
     contact: json[CustomerDBFields.contact] as String,
     address: json[CustomerDBFields.address] as String,
-    amount: json[CustomerDBFields.lent] as Amount,
-    time: json[CustomerDBFields.time] as
+    amount: amt,
+    time: DateTime.parse( json[CustomerDBFields.time] as String),
   );
-
+  }
 }
 
-List <Customer> customers = [];
+class CashLog{
+  int? cashIn;
+  int? cashOut;
+  DateTime time;
+  String? description;
+
+  CashLog({required this.time});
+}
+
+
+List <CashLog> log = [];
 
 
