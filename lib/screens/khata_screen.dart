@@ -4,13 +4,6 @@ import 'package:hisaab/theme.dart';
 import 'package:hisaab/screens/add_customer.dart';
 
 
-
-// final amountobj = Amount();
-// late final int balanceDue = amountobj.lent - amountobj.borrowed;
-int tempBorrowed = 0;
-int tempLent = 0;
-
-
 class KhataScreen extends StatefulWidget {
   const KhataScreen({Key? key}) : super(key: key);
 
@@ -21,34 +14,7 @@ class KhataScreen extends StatefulWidget {
 class _KhataScreenState extends State<KhataScreen> {
 
 
-  // static Amount obj = Amount();
-  List <Customer> customers = [
-    // Customer(customer: "Zeerak", contact: "03009245927", address: "B-4, Start Shelter, North Karachi", amount: obj),
-    // Customer(customer: "Zain", contact: "03409275761", address: "R-41, Block 18, Jauhar", amount: obj),
-  ];
 
-  int b_amountCalculator(){
-    for (var i=0; i<customers.length; i++){
-      tempBorrowed = tempBorrowed + customers[i].amount.borrowed;
-    }
-    return tempBorrowed;
-  }
-  int l_amountCalculator(){
-    for (var i=0; i<customers.length; i++){
-      tempLent = tempLent + customers[i].amount.lent;
-    }
-    return tempLent;
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    getData();
-  }
-
-  getData() async{
-
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +40,7 @@ class _KhataScreenState extends State<KhataScreen> {
                             width: 10,
                           ),
                           Text(
-                            b_amountCalculator().toString(),
+                            customers.fold <int> (0, (previousValue, element) => previousValue + element.amount.borrowed).toString(),
                             style: kNumberTheme,
                           ),
                         ],
@@ -102,7 +68,7 @@ class _KhataScreenState extends State<KhataScreen> {
                             width: 10,
                           ),
                           Text(
-                            l_amountCalculator().toString(),
+                            customers.fold <int> (0, (previousValue, element) => previousValue + element.amount.lent).toString(),
                             style: kNumberTheme,
                           ),
                         ],

@@ -31,6 +31,8 @@ dependencies:
   animated_splash_screen: ^1.1.0
   material_floating_search_bar: ^0.3.4
   shared_preferences: ^2.0.8
+  sqflite: ^2.0.0+4
+  path_provider: ^2.0.5
 
 dev_dependencies:
   flutter_test:

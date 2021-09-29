@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hisaab/models/data.dart';
 import 'package:hisaab/theme.dart';
-import 'khata_screen.dart';
+
 
 class AddCustomer extends StatefulWidget {
   const AddCustomer({Key? key}) : super(key: key);
@@ -35,9 +35,8 @@ class _AddCustomerState extends State<AddCustomer> {
     );
   }
 
-  static Amount object = Amount();
   var _formKey = GlobalKey<FormState>();
-  final Customer customer = Customer(customer: '',contact: '',address: '', amount: object);
+  final Customer customer = Customer(customer: '',contact: '',address: '', amount: Amount());
   String dropdownval ='';
   int tempamount = 0;
 
@@ -126,11 +125,11 @@ class _AddCustomerState extends State<AddCustomer> {
                         }
                         _formKey.currentState!.save();
                         if(dropdownval == 'Lent'){
-                          object.lent =  tempamount;
+                          customer.amount.lent =  tempamount;
                           // Navigator.pop(context, customer);
                         }
                         else if(dropdownval == 'Borrowed'){
-                          object.borrowed = tempamount;
+                          customer.amount.borrowed = tempamount;
                         }
                         else{
                           _showDialog();
