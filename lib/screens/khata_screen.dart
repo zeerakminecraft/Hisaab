@@ -19,15 +19,17 @@ class _KhataScreenState extends State<KhataScreen> {
   bool isLoading = false;
 
   @override
-  void initState() {
+  void initState(){
     // TODO: implement initState
     super.initState();
     refreshList();
   }
 
   Future<Function()?> refreshList() async{
-    setState(() => isLoading = true);
-    this.customers = await CustomerDatabase.instance.readAllNodes();
+    setState(() async{
+      isLoading = true;
+      this.customers = await CustomerDatabase.instance.readAllNodes();
+    });
     setState(() => isLoading = false);
   }
 
@@ -35,16 +37,17 @@ class _KhataScreenState extends State<KhataScreen> {
     await CustomerDatabase.instance.delete(id);
     setState(() {
       customers.remove(id);
-    });
-  }
-
-  Future updateCard(int id) async{
-    if (isLoading) return;
-    await Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddCustomer()));
-    setState(() {
       refreshList();
     });
   }
+  //
+  // Future updateCard(int id) async{
+  //   if (isLoading) return;
+  //   await Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddCustomer()));
+  //   setState(() {
+  //     refreshList();
+  //   });
+  // }
 
 
   @override
@@ -112,13 +115,10 @@ class _KhataScreenState extends State<KhataScreen> {
           ),
           Expanded(
             child: ListView.builder(
+              shrinkWrap: true,
               itemCount: customers.length,
               itemBuilder: (context, index){
-                return GestureDetector(
-                  onLongPress: () => deleteCard(customers[index].id!),
-                  onDoubleTap: (){
-
-                  },
+                return Expanded(
                   child: Card(
                     elevation: 10,
                     child: ListTile(
@@ -137,23 +137,12 @@ class _KhataScreenState extends State<KhataScreen> {
                         color: Colors.orange[700],
                         size: 20,
                       ),
-                      trailing: Row(
-                        children: [
-                          Text(
-                            customers[index].amount.dueBalance().toString(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              fontSize: 15,
-                            ),
-                          ),
-                          Text(
-                            DateFormat('dd-MM-yyyy - kk:mm').format(customers[index].time),
-                            style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 10,
-                            ),
-                          )
-                        ],
+                      trailing: Text(
+                        customers[index].amount.dueBalance().toString(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 15,
+                        ),
                       ),
                     ),
                   ),
@@ -184,6 +173,7 @@ class _KhataScreenState extends State<KhataScreen> {
                 setState(() {
                   customers.add(x!);
                 });
+                CustomerDatabase.instance.create(x!);
               },
             ),
           )

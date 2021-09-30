@@ -14,8 +14,8 @@ class Cashbook extends StatefulWidget {
 
 class _CashbookState extends State<Cashbook> {
 
-  int? cashIn;
-  int? cashOut;
+  // int? cashIn;
+  // int? cashOut;
 
   List <CashLog> logs = [];
   bool isLoading = false;
@@ -28,8 +28,11 @@ class _CashbookState extends State<Cashbook> {
   }
 
   Future<Function()?> refreshList() async{
-    setState(() => isLoading = true);
-    this.logs = await CashLogDatabase.instance.readAllNodes();
+    setState(() async{
+      isLoading = true;
+      this.logs = await CashLogDatabase.instance.readAllNodes();
+    });
+
     setState(() => isLoading = false);
   }
 
@@ -73,7 +76,7 @@ class _CashbookState extends State<Cashbook> {
                             width: 10,
                           ),
                           Text(
-                            cashIn != null ? cashIn.toString() : '',
+                            logs.fold <int> (0, (previousValue, element) => previousValue + element.cashIn!).toString(),
                             style: kNumberTheme,
                           ),
                         ],
@@ -101,7 +104,7 @@ class _CashbookState extends State<Cashbook> {
                             width: 10,
                           ),
                           Text(
-                            cashOut != null ? cashOut.toString() : '',
+                            logs.fold <int> (0, (previousValue, element) => previousValue + element.cashOut!).toString(),
                             style: kNumberTheme,
                           ),
                         ],
@@ -116,45 +119,29 @@ class _CashbookState extends State<Cashbook> {
             child: ListView.builder(
               itemCount: logs.length,
               itemBuilder: (context, index){
-                return GestureDetector(
-                  onLongPress: () => deleteCard(logs[index].id!),
-                  onDoubleTap: (){
-
-                  },
-                  child: Card(
-                    elevation: 10,
-                    child: ListTile(
-                      dense: true,
-                      tileColor: Colors.orangeAccent.withOpacity(0.7),
-                      title: Text(
-                        logs[index].cashIn != null? 'Cash In' : 'Cash Out',//logs[index].cashOut.toString(),
-                        style: kTextTheme,
-                      ),
-                      subtitle: Text(
-                        logs[index].description != null? logs[index].description.toString() : '',
-                      ),
-                      leading: Icon(
-                        Icons.account_circle_sharp,
-                        color: Colors.orange[700],
-                        size: 20,
-                      ),
-                      trailing: Row(
-                        children: [
-                          Text(
-                            logs[index].cashIn != null? logs[index].cashIn.toString() : logs[index].cashOut.toString(),
-                            style: TextStyle(
-                              fontWeight: FontWeight.w900,
-                              fontSize: 15,
-                            ),
-                          ),
-                          Text(
-                            DateFormat('dd-MM-yyyy - kk:mm').format(logs[index].time),
-                            style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 10,
-                            ),
-                          ),
-                        ],
+                return Card(
+                  elevation: 10,
+                  shadowColor: logs[index].cashIn != null? Colors.green[700] : Colors.red[900],
+                  child: ListTile(
+                    dense: true,
+                    tileColor: Colors.orangeAccent.withOpacity(0.7),
+                    title: Text(
+                      logs[index].cashIn != null? 'Cash In' : 'Cash Out',//logs[index].cashOut.toString(),
+                      style: kTextTheme,
+                    ),
+                    subtitle: Text(
+                      logs[index].description != null? logs[index].description.toString() : '',
+                    ),
+                    leading: Icon(
+                      Icons.account_circle_sharp,
+                      color: Colors.orange[700],
+                      size: 20,
+                    ),
+                    trailing: Text(
+                      logs[index].cashIn != null? logs[index].cashIn.toString() : logs[index].cashOut.toString(),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 15,
                       ),
                     ),
                   ),
@@ -169,7 +156,7 @@ class _CashbookState extends State<Cashbook> {
                 Expanded(
                   child: TextButton(
                     style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(Colors.orange),
+                        backgroundColor: MaterialStateProperty.all<Color>(Colors.orange.withOpacity(0.7)),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18.0),
@@ -180,8 +167,14 @@ class _CashbookState extends State<Cashbook> {
                     child: Text(
                       'CASH IN',
                     ),
-                    onPressed: () async {
-                      await AddCashInLog();
+                    onPressed: () async{
+                      final x = await Navigator.push<CashLog>(
+                        context,
+                        MaterialPageRoute(builder: (context) => AddCashInLog()),
+                      );
+                      setState(() {
+                        logs.add(x!);
+                      });
                     },
                   ),
                 ),
@@ -191,7 +184,7 @@ class _CashbookState extends State<Cashbook> {
                 Expanded(
                   child: TextButton(
                     style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(Colors.orange),
+                        backgroundColor: MaterialStateProperty.all<Color>(Colors.orange.withOpacity(0.7)),
                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                             RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(18.0),
@@ -202,8 +195,15 @@ class _CashbookState extends State<Cashbook> {
                     child: Text(
                       'CASH OUT',
                     ),
-                    onPressed: () async {
-                      await AddCashOutLog();
+                    onPressed: () async{
+                      final x = await Navigator.push<CashLog>(
+                        context,
+                          MaterialPageRoute(builder: (context) => AddCashOutLog()),
+                      );
+                      setState(() {
+                        logs.add(x!);
+                      });
+                      CashLogDatabase.instance.create(x!);
                     },
                   ),
                 ),

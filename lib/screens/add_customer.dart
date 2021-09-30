@@ -129,7 +129,7 @@ class _AddCustomerState extends State<AddCustomer> {
                       child: const Text('Add Customer'),
                       style: TextButton.styleFrom(
                         padding: const EdgeInsets.all(16.0),
-                        primary: Colors.white,
+                        primary: Colors.black,
                         textStyle: const TextStyle(fontSize: 20),
                       ),
                       onPressed: () {
