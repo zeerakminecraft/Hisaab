@@ -1,7 +1,8 @@
-import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:hisaab/theme.dart';
 import 'screens/khata_screen.dart';
+import 'screens/cashbook_screen.dart';
+import 'screens/settings.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,6 +20,8 @@ class _MyAppState extends State<MyApp> {
 
   final List<Widget> pages = [
     KhataScreen(),
+    Cashbook(),
+    Account()
   ];
 
   void _onItemTapped(int index){

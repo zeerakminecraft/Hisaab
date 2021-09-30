@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hisaab/models/data.dart';
+import 'package:hisaab/models/customer_data.dart';
 import 'package:hisaab/theme.dart';
 import 'package:intl/intl.dart';
 
@@ -70,6 +70,17 @@ class _AddCustomerState extends State<AddCustomer> {
                 },
                 onSaved: (String? value){
                   customer.contact = value!;
+                },
+              ),
+              TextFormField(
+                decoration: kFormStyle.copyWith(labelText: 'Address'),
+                validator: (String? value){
+                  if(value!.isEmpty){
+                    return 'Address is required';
+                  }
+                },
+                onSaved: (String? value){
+                  customer.address = value!;
                 },
               ),
               DropdownButton<String>(

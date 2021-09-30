@@ -1,8 +1,11 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
+
+
 final String tableCustomer = 'customers';
+
+
 
 class CustomerDBFields{
 
@@ -10,14 +13,17 @@ class CustomerDBFields{
     id, customer,contact, address, lent, borrowed, time
   ];
 
-  static final String id = "id";
+  static final String id = "_id";
   static final String customer = "name";
-  static final String contact = "_contact";
+  static final String contact = "contact";
   static final String address = "address";
   static final String lent = "lent";
   static final String borrowed = "borrowed";
   static final String time = "time";
 }
+
+
+
 
 
 class Amount {
@@ -49,6 +55,14 @@ class Amount {
   }
 
 }
+
+
+
+
+
+
+
+
 
 class Customer{
   int? id;
@@ -109,17 +123,4 @@ class Customer{
   );
   }
 }
-
-class CashLog{
-  int? cashIn;
-  int? cashOut;
-  DateTime time;
-  String? description;
-
-  CashLog({required this.time});
-}
-
-
-List <CashLog> log = [];
-
 

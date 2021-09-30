@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:hisaab/models/data.dart';
+import 'package:hisaab/models/customer_data.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 

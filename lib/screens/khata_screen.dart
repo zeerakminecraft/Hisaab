@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hisaab/models/data.dart';
-import 'package:hisaab/models/database_helpers.dart';
+import 'package:hisaab/models/customer_data.dart';
+import 'package:hisaab/models/customer_db.dart';
 import 'package:hisaab/theme.dart';
 import 'package:hisaab/screens/add_customer.dart';
 import 'package:intl/intl.dart';
@@ -33,13 +33,17 @@ class _KhataScreenState extends State<KhataScreen> {
 
   Future deleteCard(int id) async{
     await CustomerDatabase.instance.delete(id);
+    setState(() {
+      customers.remove(id);
+    });
   }
 
   Future updateCard(int id) async{
     if (isLoading) return;
-
     await Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddCustomer()));
-    refreshList();
+    setState(() {
+      refreshList();
+    });
   }
 
 
