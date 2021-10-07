@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hisaab/models/customer_data.dart';
 import 'package:hisaab/theme.dart';
-import 'package:intl/intl.dart';
-
 
 class AddCustomer extends StatefulWidget {
   const AddCustomer({Key? key}) : super(key: key);
@@ -12,8 +10,6 @@ class AddCustomer extends StatefulWidget {
 }
 
 class _AddCustomerState extends State<AddCustomer> {
-
-
   void _showDialog() {
     // flutter defined function
     showDialog(
@@ -21,12 +17,12 @@ class _AddCustomerState extends State<AddCustomer> {
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: new Text("Invalid Input"),
-          content: new Text("Please enter specify amount category"),
+          title: Text("Invalid Input"),
+          content: Text("Please enter specify amount category"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
-            new FlatButton(
-              child: new Text("Close"),
+            FlatButton(
+              child: Text("Close"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -37,9 +33,14 @@ class _AddCustomerState extends State<AddCustomer> {
     );
   }
 
-  var _formKey = GlobalKey<FormState>();
-  final Customer customer = Customer(customer: '',contact: '',address: '', amount: Amount(), time: DateTime.now());
-  String dropdownval ='';
+  final _formKey = GlobalKey<FormState>();
+  final Customer customer = Customer(
+      name: '',
+      contact: '',
+      address: '',
+      amount: Amount(),
+      time: DateTime.now());
+  String dropdownval = '';
   int tempamount = 0;
 
   @override
@@ -52,34 +53,34 @@ class _AddCustomerState extends State<AddCustomer> {
             children: [
               TextFormField(
                 decoration: kFormStyle.copyWith(labelText: 'Name'),
-                validator: (String? value){
-                  if(value!.isEmpty){
+                validator: (String? value) {
+                  if (value!.isEmpty) {
                     return 'Name is required';
                   }
                 },
-                onSaved: (String? value){
-                  customer.customer = value!;
+                onSaved: (String? value) {
+                  customer.name = value!;
                 },
               ),
               TextFormField(
                 decoration: kFormStyle.copyWith(labelText: 'Contact Number'),
-                validator: (String? value){
-                  if(value!.isEmpty){
+                validator: (String? value) {
+                  if (value!.isEmpty) {
                     return 'Phone Number is required';
                   }
                 },
-                onSaved: (String? value){
+                onSaved: (String? value) {
                   customer.contact = value!;
                 },
               ),
               TextFormField(
                 decoration: kFormStyle.copyWith(labelText: 'Address'),
-                validator: (String? value){
-                  if(value!.isEmpty){
+                validator: (String? value) {
+                  if (value!.isEmpty) {
                     return 'Address is required';
                   }
                 },
-                onSaved: (String? value){
+                onSaved: (String? value) {
                   customer.address = value!;
                 },
               ),
@@ -90,7 +91,7 @@ class _AddCustomerState extends State<AddCustomer> {
                     dropdownval = newValue!;
                   });
                 },
-                items: <String>['','Lent','Borrowed']
+                items: <String>['', 'Lent', 'Borrowed']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
@@ -100,12 +101,12 @@ class _AddCustomerState extends State<AddCustomer> {
               ),
               TextFormField(
                 decoration: kFormStyle.copyWith(labelText: 'Amount'),
-                validator: (String? value){
-                  if(value!.isEmpty){
+                validator: (String? value) {
+                  if (value!.isEmpty) {
                     return 'Amount is required';
                   }
                 },
-                onSaved: (String? value){
+                onSaved: (String? value) {
                   tempamount = int.parse(value!);
                 },
               ),
@@ -133,18 +134,16 @@ class _AddCustomerState extends State<AddCustomer> {
                         textStyle: const TextStyle(fontSize: 20),
                       ),
                       onPressed: () {
-                        if(!_formKey.currentState!.validate()){
+                        if (!_formKey.currentState!.validate()) {
                           return;
                         }
                         _formKey.currentState!.save();
-                        if(dropdownval == 'Lent'){
-                          customer.amount.lent =  tempamount;
+                        if (dropdownval == 'Lent') {
+                          customer.amount.lent = tempamount;
                           // Navigator.pop(context, customer);
-                        }
-                        else if(dropdownval == 'Borrowed'){
+                        } else if (dropdownval == 'Borrowed') {
                           customer.amount.borrowed = tempamount;
-                        }
-                        else{
+                        } else {
                           _showDialog();
                         }
                         Navigator.pop(context, customer);
@@ -160,17 +159,6 @@ class _AddCustomerState extends State<AddCustomer> {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
 
 // Text(
 //   ''

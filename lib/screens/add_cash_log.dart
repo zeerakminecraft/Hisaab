@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hisaab/models/cash_log_data.dart';
 import 'package:hisaab/theme.dart';
-import 'package:intl/intl.dart';
 
 class AddCashInLog extends StatefulWidget {
   const AddCashInLog({Key? key}) : super(key: key);
@@ -11,11 +10,9 @@ class AddCashInLog extends StatefulWidget {
 }
 
 class _AddCashInLogState extends State<AddCashInLog> {
-
-  List <CashLog> log = [];
-  var _formKey = GlobalKey<FormState>();
+  List<CashLog> log = [];
+  final _formKey = GlobalKey<FormState>();
   final CashLog cashLog = CashLog(time: DateTime.now());
-
 
   @override
   Widget build(BuildContext context) {
@@ -27,18 +24,18 @@ class _AddCashInLogState extends State<AddCashInLog> {
             children: [
               TextFormField(
                 decoration: kFormStyle.copyWith(labelText: 'Amount'),
-                validator: (String? value){
-                  if(value!.isEmpty){
+                validator: (String? value) {
+                  if (value!.isEmpty) {
                     return 'Amount is required';
                   }
                 },
-                onSaved: (String? value){
+                onChanged: (String? value) {
                   cashLog.cashIn = int.parse(value!);
                 },
               ),
               TextFormField(
                 decoration: kFormStyle.copyWith(labelText: 'Description'),
-                onSaved: (String? value){
+                onChanged: (String? value) {
                   cashLog.description = value;
                 },
               ),
@@ -80,9 +77,6 @@ class _AddCashInLogState extends State<AddCashInLog> {
     );
   }
 }
-
-
-
 
 class AddCashOutLog extends StatefulWidget {
   const AddCashOutLog({Key? key}) : super(key: key);
@@ -92,9 +86,7 @@ class AddCashOutLog extends StatefulWidget {
 }
 
 class _AddCashOutLogState extends State<AddCashOutLog> {
-
-  List <CashLog> log = [];
-  var _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   final CashLog cashLog = CashLog(time: DateTime.now());
 
   @override
@@ -107,18 +99,18 @@ class _AddCashOutLogState extends State<AddCashOutLog> {
             children: [
               TextFormField(
                 decoration: kFormStyle.copyWith(labelText: 'Amount'),
-                validator: (String? value){
-                  if(value!.isEmpty){
+                validator: (String? value) {
+                  if (value!.isEmpty) {
                     return 'Amount is required';
                   }
                 },
-                onSaved: (String? value){
+                onChanged: (String? value) {
                   cashLog.cashOut = int.parse(value!);
                 },
               ),
               TextFormField(
                 decoration: kFormStyle.copyWith(labelText: 'Description'),
-                onSaved: (String? value){
+                onChanged: (String? value) {
                   cashLog.description = value;
                 },
               ),
@@ -146,7 +138,7 @@ class _AddCashOutLogState extends State<AddCashOutLog> {
                         textStyle: const TextStyle(fontSize: 20),
                       ),
                       onPressed: () {
-                        log.add(cashLog);
+                        print(cashLog);
                         Navigator.pop(context, cashLog);
                       },
                     ),
@@ -160,4 +152,3 @@ class _AddCashOutLogState extends State<AddCashOutLog> {
     );
   }
 }
-

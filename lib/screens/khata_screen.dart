@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hisaab/models/customer_data.dart';
 import 'package:hisaab/models/customer_db.dart';
+import 'package:hisaab/services/database_service.dart';
 import 'package:hisaab/theme.dart';
 import 'package:hisaab/screens/add_customer.dart';
-import 'package:intl/intl.dart';
-
+import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart';
 
 class KhataScreen extends StatefulWidget {
   const KhataScreen({Key? key}) : super(key: key);
@@ -14,354 +15,150 @@ class KhataScreen extends StatefulWidget {
 }
 
 class _KhataScreenState extends State<KhataScreen> {
-
-  List <Customer> customers = [];
+  List<Customer> customers = [];
   bool isLoading = false;
 
   @override
-  void initState(){
-    // TODO: implement initState
+  void initState() {
     super.initState();
-    refreshList();
+
+    _refreshCustomersList();
   }
 
-  Future<Function()?> refreshList() async{
-    setState(() async{
-      isLoading = true;
-      this.customers = await CustomerDatabase.instance.readAllNodes();
-    });
-    setState(() => isLoading = false);
+  Future<void> _refreshCustomersList() async {
+    final database = context.read<Database>();
+    final customers = await DatabaseService.getAllCustomers(database: database);
+    this.customers = customers;
+    setState(() {});
   }
-
-  Future deleteCard(int id) async{
-    await CustomerDatabase.instance.delete(id);
-    setState(() {
-      customers.remove(id);
-      refreshList();
-    });
-  }
-  //
-  // Future updateCard(int id) async{
-  //   if (isLoading) return;
-  //   await Navigator.of(context).push(MaterialPageRoute(builder: (context) => AddCustomer()));
-  //   setState(() {
-  //     refreshList();
-  //   });
-  // }
-
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Expanded(
-                child: Card(
-                  // margin: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
-                  color: Colors.green,
-                  child: ListTile(
-                    title: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(
-                            'Borrowed',
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            customers.fold <int> (0, (previousValue, element) => previousValue + element.amount.borrowed).toString(),
-                            style: kNumberTheme,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                width: 10.0,
-              ),
-              Expanded(
-                child: Card(
-                  // margin: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
-                  color: Colors.red,
-                  child: ListTile(
-                    title: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(
-                            'Lent',
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            customers.fold <int> (0, (previousValue, element) => previousValue + element.amount.lent).toString(),
-                            style: kNumberTheme,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: customers.length,
-              itemBuilder: (context, index){
-                return Expanded(
-                  child: Card(
-                    elevation: 10,
-                    child: ListTile(
-                      dense: true,
-                      tileColor: Colors.orangeAccent.withOpacity(0.7),
-                      title: Text(
-                        customers[index].customer,
-                        style: kTextTheme,
-                      ),
-                      subtitle: Text(
-                        customers[index].contact,
-                        style: kTextTheme,
-                      ),
-                      leading: Icon(
-                        Icons.account_circle_sharp,
-                        color: Colors.orange[700],
-                        size: 20,
-                      ),
-                      trailing: Text(
-                        customers[index].amount.dueBalance().toString(),
-                        style: TextStyle(
-                          fontWeight: FontWeight.w900,
-                          fontSize: 15,
+    return Column(
+      children: <Widget>[
+        Row(
+          children: [
+            Expanded(
+              child: Card(
+                color: Colors.green,
+                child: ListTile(
+                  title: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text('Borrowed'),
+                        SizedBox(width: 10),
+                        Text(
+                          customers
+                              .fold<int>(
+                                  0,
+                                  (previousValue, element) =>
+                                      previousValue + element.amount.borrowed)
+                              .toString(),
+                          style: kNumberTheme,
                         ),
-                      ),
+                      ],
                     ),
                   ),
-                );
-              },
+                ),
+              ),
             ),
+            SizedBox(width: 10.0),
+            Expanded(
+              child: Card(
+                color: Colors.red,
+                child: ListTile(
+                  title: Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text('Lent'),
+                        SizedBox(width: 10),
+                        Text(
+                          customers
+                              .fold<int>(
+                                  0,
+                                  (previousValue, element) =>
+                                      previousValue + element.amount.lent)
+                              .toString(),
+                          style: kNumberTheme,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemCount: customers.length,
+            itemBuilder: (context, index) {
+              return Card(
+                elevation: 10,
+                child: ListTile(
+                  dense: true,
+                  tileColor: Colors.orangeAccent.withOpacity(0.7),
+                  title: Text(
+                    customers[index].name,
+                    style: kTextTheme,
+                  ),
+                  subtitle: Text(
+                    customers[index].contact,
+                    style: kTextTheme,
+                  ),
+                  leading: Icon(
+                    Icons.account_circle_sharp,
+                    color: Colors.orange[700],
+                    size: 20,
+                  ),
+                  trailing: Text(
+                    customers[index].amount.dueBalance().toString(),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: TextButton(
-              style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(Colors.orange),
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                          side: BorderSide(color: Colors.black)
-                      )
-                  )
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: TextButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.orange),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18.0),
+                  side: BorderSide(color: Colors.black),
+                ),
               ),
-              child: Text(
-                'ADD CUTOMER',
-              ),
-              onPressed: () async {
-                final x = await Navigator.push<Customer>(
-                    context,
-                    MaterialPageRoute(builder: (context) => AddCustomer())
-                );
-                setState(() {
-                  customers.add(x!);
-                });
-                CustomerDatabase.instance.create(x!);
-              },
             ),
-          )
-        ],
-      ),
+            child: Text('ADD CUTOMER'),
+            onPressed: () async {
+              final newCustomer = await Navigator.push<Customer>(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddCustomer(),
+                ),
+              );
+
+              if (newCustomer == null) return;
+
+              final database = context.read<Database>();
+              await DatabaseService.insertCustomer(
+                database: database,
+                customer: newCustomer,
+              );
+
+              await _refreshCustomersList();
+            },
+          ),
+        )
+      ],
     );
   }
 }
-
-
-
-
-
-
-
-// class MainScreen extends StatefulWidget {
-//   @override
-//   _MainScreenState createState() => _MainScreenState();
-// }
-//
-// class _MainScreenState extends State<MainScreen> {
-//   final List<Widget> pages = [
-//     ///KHATA PAGE
-//     Column(
-//       children: <Widget>[
-//         Row(
-//           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//           children: [
-//             Expanded(
-//               child: Card(
-//                 // margin: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
-//                 color: Colors.green,
-//                 child: ListTile(
-//                   title: Center(
-//                     child: Row(
-//                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                       children: [
-//                         Text(
-//                           'Borrowed',
-//                         ),
-//                         SizedBox(
-//                           width: 10,
-//                         ),
-//                         Text(
-//                           amountobj.borrowed.toString(),
-//                           style: kNumberTheme,
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//             ),
-//             SizedBox(
-//               width: 10.0,
-//             ),
-//             Expanded(
-//               child: Card(
-//                 // margin: EdgeInsets.symmetric(vertical: 20.0, horizontal: 10.0),
-//                 color: Colors.red,
-//                 child: ListTile(
-//                   title: Center(
-//                     child: Row(
-//                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//                       children: [
-//                         Text(
-//                           'Lent',
-//                         ),
-//                         SizedBox(
-//                           width: 10,
-//                         ),
-//                         Text(
-//                           amountobj.lent.toString(),
-//                           style: kNumberTheme,
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//         Expanded(
-//           child: ListView.builder(
-//             itemCount: customers.length,
-//             itemBuilder: (context, index){
-//               return Card(
-//                 elevation: 10,
-//                 child: ListTile(
-//                   dense: true,
-//                   tileColor: Colors.orangeAccent.withOpacity(0.7),
-//                   title: Text(
-//                     customers[index].customer,
-//                     style: kTextTheme,
-//                   ),
-//                   subtitle: Text(
-//                     customers[index].contact,
-//                     style: kTextTheme,
-//                   ),
-//                   leading: Icon(
-//                     Icons.account_circle_sharp,
-//                     color: Colors.orange[700],
-//                     size: 20,
-//                   ),
-//                   trailing: Text(
-//                     balanceDue.toString(),
-//                     style: TextStyle(
-//                       fontWeight: FontWeight.w900,
-//                       fontSize: 15,
-//                     ),
-//                   ),
-//                 ),
-//               );
-//             },
-//           ),
-//         ),
-//         Align(
-//           alignment: Alignment.bottomCenter,
-//           child: TextButton(
-//             style: ButtonStyle(
-//               backgroundColor: MaterialStateProperty.all<Color>(Colors.orange),
-//               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-//                   RoundedRectangleBorder(
-//                       borderRadius: BorderRadius.circular(18.0),
-//                       side: BorderSide(color: Colors.black)
-//                   )
-//               )
-//             ),
-//             child: Text(
-//               'ADD CUTOMER',
-//             ),
-//             onPressed: (){
-//               Navigator.push(
-//                 context,
-//                 MaterialPageRoute(builder: (context) => AddCustomer())
-//               )
-//             },
-//           ),
-//         )
-//       ],
-//     ),
-//     Center(),
-//     Center(),
-//   ];
-//
-//   int _selectedindex = 0;
-//   void _onItemTapped(int index){
-//     print(index);
-//     setState(() {
-//       _selectedindex = index;
-//     });
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: SafeArea(
-//         child: Padding(
-//           padding: const EdgeInsets.all(8.0),
-//           child: Center(
-//             child: pages.elementAt(_selectedindex),
-//           ),
-//         ),
-//       ),
-//       bottomNavigationBar: BottomNavigationBar(
-//         iconSize: 20,
-//         elevation: 10,
-//         backgroundColor: Colors.orangeAccent,
-//         selectedItemColor: Colors.black,
-//         unselectedItemColor: Colors.black54,
-//         currentIndex: _selectedindex,
-//         onTap: _onItemTapped,
-//         items: [
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.ballot_outlined),
-//             label: 'Khata',
-//           ),
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.book_sharp),
-//             label: 'Cashbook',
-//           ),
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.account_circle_sharp),
-//             label: 'Account',
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
