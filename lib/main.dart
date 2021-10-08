@@ -23,7 +23,6 @@ class _MyAppState extends State<MyApp> {
   final pages = const [KhataScreen(), Cashbook(), Account()];
 
   void _onItemTapped(int index) {
-    print(index);
     setState(() {
       _selectedindex = index;
     });

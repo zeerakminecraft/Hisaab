@@ -98,6 +98,7 @@ class _AddCashOutLogState extends State<AddCashOutLog> {
           child: Column(
             children: [
               TextFormField(
+                keyboardType: TextInputType.number,
                 decoration: kFormStyle.copyWith(labelText: 'Amount'),
                 validator: (String? value) {
                   if (value!.isEmpty) {
@@ -109,6 +110,7 @@ class _AddCashOutLogState extends State<AddCashOutLog> {
                 },
               ),
               TextFormField(
+                keyboardType: TextInputType.text,
                 decoration: kFormStyle.copyWith(labelText: 'Description'),
                 onChanged: (String? value) {
                   cashLog.description = value;

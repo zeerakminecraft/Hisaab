@@ -61,6 +61,15 @@ class DatabaseService {
     return customers;
   }
 
+  static Future<void> deleteCustomer(int id, Database database) async {
+    final db = database;
+    await db.delete('CUSTOMERS',where: 'id = ?', whereArgs: [id]);
+  }
+
+  // static Future<void> updateCustomer(){
+  //
+  // }
+
   static Future<int> insertCashLog({
     required Database database,
     required CashLog cashLog,
@@ -81,5 +90,10 @@ class DatabaseService {
         .toList();
 
     return cashLogs;
+  }
+
+  static Future<void> deleteCashLog(int id, Database database) async {
+    final db = database;
+    await db.delete('CASHLOGS',where: 'id = ?', whereArgs: [id]);
   }
 }

@@ -63,7 +63,7 @@ class _KhataScreenState extends State<KhataScreen> {
                 ),
               ),
             ),
-            SizedBox(width: 10.0),
+            const SizedBox(width: 10.0),
             Expanded(
               child: Card(
                 color: Colors.red,
@@ -72,8 +72,8 @@ class _KhataScreenState extends State<KhataScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Text('Lent'),
-                        SizedBox(width: 10),
+                        const Text('Lent'),
+                        const SizedBox(width: 10),
                         Text(
                           customers
                               .fold<int>(
@@ -95,29 +95,42 @@ class _KhataScreenState extends State<KhataScreen> {
           child: ListView.builder(
             itemCount: customers.length,
             itemBuilder: (context, index) {
-              return Card(
-                elevation: 10,
-                child: ListTile(
-                  dense: true,
-                  tileColor: Colors.orangeAccent.withOpacity(0.7),
-                  title: Text(
-                    customers[index].name,
-                    style: kTextTheme,
-                  ),
-                  subtitle: Text(
-                    customers[index].contact,
-                    style: kTextTheme,
-                  ),
-                  leading: Icon(
-                    Icons.account_circle_sharp,
-                    color: Colors.orange[700],
-                    size: 20,
-                  ),
-                  trailing: Text(
-                    customers[index].amount.dueBalance().toString(),
-                    style: TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 15,
+              return GestureDetector(
+
+                onLongPress: () async{
+                  final database = context.read<Database>();
+                  await DatabaseService.deleteCustomer(customers[index].id!, database);
+                  await _refreshCustomersList();
+                },
+
+                onDoubleTap: () async{
+                  //update
+                },
+
+                child: Card(
+                  elevation: 10,
+                  child: ListTile(
+                    dense: true,
+                    tileColor: Colors.orangeAccent.withOpacity(0.7),
+                    title: Text(
+                      customers[index].name,
+                      style: kTextTheme,
+                    ),
+                    subtitle: Text(
+                      customers[index].contact,
+                      style: kTextTheme,
+                    ),
+                    leading: Icon(
+                      Icons.account_circle_sharp,
+                      color: Colors.orange[700],
+                      size: 50,
+                    ),
+                    trailing: Text(
+                      customers[index].amount.dueBalance().toString(),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 15,
+                      ),
                     ),
                   ),
                 ),
@@ -133,16 +146,16 @@ class _KhataScreenState extends State<KhataScreen> {
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(18.0),
-                  side: BorderSide(color: Colors.black),
+                  side: const BorderSide(color: Colors.black),
                 ),
               ),
             ),
-            child: Text('ADD CUTOMER'),
+            child: const Text('ADD CUTOMER'),
             onPressed: () async {
               final newCustomer = await Navigator.push<Customer>(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => AddCustomer(),
+                  builder: (context) => const AddCustomer(),
                 ),
               );
 

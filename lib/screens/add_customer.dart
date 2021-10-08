@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hisaab/models/customer_data.dart';
 import 'package:hisaab/theme.dart';
+// import 'package:vector_math/vector_math.dart';
 
 class AddCustomer extends StatefulWidget {
   const AddCustomer({Key? key}) : super(key: key);
@@ -52,6 +53,7 @@ class _AddCustomerState extends State<AddCustomer> {
           child: Column(
             children: [
               TextFormField(
+                keyboardType: TextInputType.name,
                 decoration: kFormStyle.copyWith(labelText: 'Name'),
                 validator: (String? value) {
                   if (value!.isEmpty) {
@@ -63,6 +65,8 @@ class _AddCustomerState extends State<AddCustomer> {
                 },
               ),
               TextFormField(
+                maxLength: 11,
+                keyboardType: TextInputType.phone,
                 decoration: kFormStyle.copyWith(labelText: 'Contact Number'),
                 validator: (String? value) {
                   if (value!.isEmpty) {
@@ -74,6 +78,7 @@ class _AddCustomerState extends State<AddCustomer> {
                 },
               ),
               TextFormField(
+                keyboardType: TextInputType.streetAddress,
                 decoration: kFormStyle.copyWith(labelText: 'Address'),
                 validator: (String? value) {
                   if (value!.isEmpty) {
@@ -84,22 +89,36 @@ class _AddCustomerState extends State<AddCustomer> {
                   customer.address = value!;
                 },
               ),
-              DropdownButton<String>(
-                value: dropdownval,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    dropdownval = newValue!;
-                  });
-                },
-                items: <String>['', 'Lent', 'Borrowed']
-                    .map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
+              Container(
+                width: 300,
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  border: Border.all(color: Colors.black, width: 2),
+                ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    icon: const Icon(Icons.arrow_drop_down, color: Colors.black45,),
+                    // hint: const Text('Transaction type'),
+                    isExpanded: true,
+                    value: dropdownval,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        dropdownval = newValue!;
+                      });
+                    },
+                    items: <String>['','Lent', 'Borrowed']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  ),
+                ),
               ),
               TextFormField(
+                keyboardType: TextInputType.number,
                 decoration: kFormStyle.copyWith(labelText: 'Amount'),
                 validator: (String? value) {
                   if (value!.isEmpty) {

@@ -98,37 +98,44 @@ class _CashbookState extends State<Cashbook> {
           child: ListView.builder(
             itemCount: cashLogs.length,
             itemBuilder: (context, index) {
-              return Card(
-                elevation: 10,
-                shadowColor: cashLogs[index].cashIn != null
-                    ? Colors.green[700]
-                    : Colors.red[900],
-                child: ListTile(
-                  dense: true,
-                  tileColor: Colors.orangeAccent.withOpacity(0.7),
-                  title: Text(
-                    cashLogs[index].cashIn != null
-                        ? 'Cash In'
-                        : 'Cash Out', //logs[index].cashOut.toString(),
-                    style: kTextTheme,
-                  ),
-                  subtitle: Text(
-                    cashLogs[index].description != null
-                        ? cashLogs[index].description.toString()
-                        : '',
-                  ),
-                  leading: Icon(
-                    Icons.account_circle_sharp,
-                    color: Colors.orange[700],
-                    size: 20,
-                  ),
-                  trailing: Text(
-                    cashLogs[index].cashIn != null
-                        ? cashLogs[index].cashIn.toString()
-                        : cashLogs[index].cashOut.toString(),
-                    style: TextStyle(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 15,
+              return GestureDetector(
+                onLongPress:  () async{
+                  final database = context.read<Database>();
+                  await DatabaseService.deleteCustomer(cashLogs[index].id!, database);
+                  await _refreshCashLogsList();
+                },
+                child: Card(
+                  elevation: 10,
+                  shadowColor: cashLogs[index].cashIn != null
+                      ? Colors.green[700]
+                      : Colors.red[900],
+                  child: ListTile(
+                    dense: true,
+                    tileColor: Colors.orangeAccent.withOpacity(0.7),
+                    title: Text(
+                      cashLogs[index].cashIn != null
+                          ? 'Cash In'
+                          : 'Cash Out', //logs[index].cashOut.toString(),
+                      style: kTextTheme,
+                    ),
+                    subtitle: Text(
+                      cashLogs[index].description != null
+                          ? cashLogs[index].description.toString()
+                          : '',
+                    ),
+                    leading: Icon(
+                      Icons.account_circle_sharp,
+                      color: Colors.orange[700],
+                      size: 20,
+                    ),
+                    trailing: Text(
+                      cashLogs[index].cashIn != null
+                          ? cashLogs[index].cashIn.toString()
+                          : cashLogs[index].cashOut.toString(),
+                      style: TextStyle(
+                        fontWeight: FontWeight.w900,
+                        fontSize: 15,
+                      ),
                     ),
                   ),
                 ),
